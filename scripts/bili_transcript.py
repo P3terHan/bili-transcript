@@ -114,6 +114,7 @@ def asr(audio_path, model_size="small", prompt=""):
             chunks.append(f.to_ndarray())
     for f in resampler.resample(None):
         chunks.append(f.to_ndarray())
+    container.close()  # 释放文件句柄，否则 Windows 上后续删除 audio.m4s 会 PermissionError
     pcm = np.concatenate([c.reshape(-1) for c in chunks]).astype(np.float32) / 32768.0
     print("audio seconds: %.1f" % (len(pcm) / 16000), flush=True)
 
@@ -166,7 +167,10 @@ def main():
             f.write("[%.1f-%.1f] %s\n" % (st, en, tx))
             print("%6.1f - %6.1f  %s" % (st, en, tx))
     print("saved", out)
-    os.remove(m4s)
+    try:
+        os.remove(m4s)
+    except OSError:
+        pass
 
 
 if __name__ == "__main__":
