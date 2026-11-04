@@ -24,6 +24,31 @@ pip install -r requirements.txt
 
 需要 Python 3.10+。首次运行会自动下载 Whisper `small` 模型（约 464MB）到 `~/.cache/whisper_models_cache`；可用环境变量 `WHISPER_CACHE` 指定目录。
 
+## 安装为 Skill（DSH / WorkBuddy）
+
+本仓库本身就是一个 skill（根目录 `SKILL.md` + `scripts/`）。克隆进对应产品的 skills 目录即可被扫描到：
+
+```powershell
+# DSH（默认目录 ~/.dsh/skills）
+git clone https://github.com/P3terHan/bili-transcript.git "$env:USERPROFILE\.dsh\skills\bili-transcript"
+
+# WorkBuddy（默认目录 ~/.workbuddy/skills）
+git clone https://github.com/P3terHan/bili-transcript.git "$env:USERPROFILE\.workbuddy\skills\bili-transcript"
+```
+
+依赖不随仓库携带，装完后安装依赖并**重启该产品**，skill 才会被重新扫描加载：
+
+```powershell
+cd "$env:USERPROFILE\.dsh\skills\bili-transcript"
+python -m venv .venv; .\.venv\Scripts\activate; pip install -r requirements.txt
+```
+
+### 给 Agent 的一句话提示词
+
+> 把 https://github.com/P3terHan/bili-transcript 克隆到本产品的 skills 目录（DSH 为 `~/.dsh/skills/bili-transcript`，WorkBuddy 为 `~/.workbuddy/skills/bili-transcript`），安装 `requirements.txt` 依赖后重启；以后收到 BV 号就用该 skill 提取文案。
+
+> ⚠️ 两个硬限制：① skill 在**启动时**扫描，装完必须重启才能被调用；② 仓库不带 Python 依赖，需自行 `pip install -r requirements.txt`，Whisper 模型首次运行才会下载。
+
 ## 使用
 
 ```bash
